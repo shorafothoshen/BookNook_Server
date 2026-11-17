@@ -8,7 +8,7 @@ const client = new MongoClient(
 export async function ConnectToMongoDB() {
   try {
     await client.connect();
-    console.log("Succesfully Connection to Mongodb");
+    console.log("Successfully connected to MongoDB");
     return client;
   } catch (err) {
     console.dir(err);
@@ -16,4 +16,4 @@ export async function ConnectToMongoDB() {
 }
 
 const connectedClient = await ConnectToMongoDB();
-export const db = connectedClient?.db("SimpleDataBase_Express");
+export const db = connectedClient?.db("booknook");

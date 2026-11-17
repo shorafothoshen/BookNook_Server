@@ -1,0 +1,19 @@
+import {db} from "../config/db.ts";
+
+type BookCategory =  "Fiction" | "Science" | "History" | "Kids" | "Others"
+
+export interface Book {
+  _id: string;
+  title: string;
+  author: string;
+  category: BookCategory;
+  image: string;
+  description: string;
+  totalCopies: number;
+  availableCopies: number;
+  userName: string;
+  userEmail: string;
+  createdAt: string;
+}
+
+export const booksCollection = db?.collection<Book>("books");
