@@ -3,7 +3,6 @@ import {db} from "../config/db.ts";
 type BookCategory =  "Fiction" | "Science" | "History" | "Kids" | "Others"
 
 export interface Book {
-  _id: string;
   title: string;
   author: string;
   category: BookCategory;

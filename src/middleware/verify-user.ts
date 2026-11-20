@@ -1,4 +1,13 @@
 import type { NextFunction, Request, Response } from "express";
+import { createRemoteJWKSet, jwtVerify } from "jose";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { email: string };
+    }
+  }
+}
 
 export const verifyToken = async (req: Request,res: Response,next: NextFunction,): Promise<void> => {
   const authHeader = req.headers.authorization;
@@ -13,12 +22,14 @@ export const verifyToken = async (req: Request,res: Response,next: NextFunction,
     return;
   }
 
-//   const JWKS = createRemoteJWKSet(
-//     new URL(`${process.env.CLIENT_URL}/api/auth/jwks`),
-//   );
+  const JWKS = createRemoteJWKSet(
+    new URL(`${process.env.CLIENT_URL}/api/auth/jwks`),
+  )
 
   try { 
-    // const { payload } = await jwtVerify(token, JWKS);
+    const { payload } = await jwtVerify(token, JWKS);
+    const email = payload.email;
+    req.user = { email: email as string };
     next();
   } catch {
     res.status(500).send({ msg: "Server Error!" });
