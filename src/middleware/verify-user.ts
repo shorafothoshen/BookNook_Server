@@ -31,7 +31,8 @@ export const verifyToken = async (req: Request,res: Response,next: NextFunction,
     const email = payload.email;
     req.user = { email: email as string };
     next();
-  } catch {
+  } catch (error) {
+    console.error("Token verification failed:", error);
     res.status(500).send({ msg: "Server Error!" });
   }
 };

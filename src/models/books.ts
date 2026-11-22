@@ -12,7 +12,7 @@ export interface Book {
   availableCopies: number;
   userName: string;
   userEmail: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 export const booksCollection = db?.collection<Book>("books");
