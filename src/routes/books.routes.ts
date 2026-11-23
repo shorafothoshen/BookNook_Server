@@ -31,12 +31,12 @@ router.get("/limit-books", async (req:Request, res:Response) =>{
 })
 
 router.post('/add-books', verifyToken, async (req:Request, res:Response)=>{
-    const userEmail = req.user?.email;
-    if (!userEmail) {
-        res.status(401).json({message: "Authenticated user email not found"});
+    const user = req.user;
+    if (!user) {
+        res.status(401).json({message: "Authenticated user not found"});
         return;
     }
-    const book = {...req.body, userEmail, createdAt: new Date()};
+    const book = {...req.body,userName: user.name, userEmail: user.email, createdAt: new Date()};
     const result = await booksCollection?.insertOne(book);
     res.status(201).json({message: "Book added successfully", bookId: result});
 })

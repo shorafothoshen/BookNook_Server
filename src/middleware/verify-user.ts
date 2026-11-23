@@ -4,7 +4,7 @@ import { createRemoteJWKSet, jwtVerify } from "jose";
 declare global {
   namespace Express {
     interface Request {
-      user?: { email: string };
+      user?: { email: string; name: string };
     }
   }
 }
@@ -29,7 +29,8 @@ export const verifyToken = async (req: Request,res: Response,next: NextFunction,
   try { 
     const { payload } = await jwtVerify(token, JWKS);
     const email = payload.email;
-    req.user = { email: email as string };
+    const name = payload.name;
+    req.user = { email: email as string, name: name as string };
     next();
   } catch (error) {
     console.error("Token verification failed:", error);
