@@ -7,7 +7,7 @@ router.get("/trending-books", async (req: Request, res: Response) => {
     try {
         const [featured, newBooks, mostBorrowed] = await Promise.all([
             booksCollection
-                ?.find({ borrowCount: { $gte: 3 } })
+                ?.find({ borrowCount: { $gte: 2 } })
                 .sort({ borrowCount: -1 })
                 .limit(7)
                 .toArray(),

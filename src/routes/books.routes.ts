@@ -5,7 +5,7 @@ import {ObjectId} from 'mongodb';
 
 const router = Router();
 
-router.get('/books', verifyToken, async (req: Request, res: Response) => {
+router.get('/books', async (req: Request, res: Response) => {
     const books = await booksCollection?.find({}).project({userEmail: 0}).sort({createdAt: -1}).toArray();
     res.status(200).json(books);
 })
