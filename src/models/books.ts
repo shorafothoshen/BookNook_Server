@@ -13,6 +13,8 @@ export interface Book {
   userName: string;
   userEmail: string;
   createdAt: Date;
+  isFeatured?: boolean;  
+  borrowCount?: number;
 }
 
 export const booksCollection = db?.collection<Book>("books");

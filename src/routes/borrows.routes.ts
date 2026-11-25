@@ -9,8 +9,18 @@ const router = Router();
 router.get("/my-borrows", verifyToken, async (req: Request, res: Response) => {
     const borrows = await borrowsCollection
         ?.find({ userEmail: req.user?.email, status: "borrowed" })
+        .sort({ createdAt: -1 })
         .toArray();
-    res.status(200).json(borrows ?? []);
+
+    res.status(200).json(
+        (borrows ?? []).map((b) => ({
+            _id: b._id,
+            title: b.bookTitle,
+            image: b.bookImage,
+            borrowDate: b.borrowedDate,
+            returnDate: b.returnDate,
+        }))
+    );
 });
 
 router.post("/borrow/:id", verifyToken, async (req: Request, res: Response) => {
@@ -45,7 +55,7 @@ router.post("/borrow/:id", verifyToken, async (req: Request, res: Response) => {
 
     const stockUpdate = await booksCollection?.updateOne(
         { _id: bookId, availableCopies: { $gt: 0 } },
-        { $inc: { availableCopies: -1 } },
+        { $inc: { availableCopies: -1, borrowCount: 1 } },
     );
     if (!stockUpdate?.modifiedCount) {
         res.status(400).json({ message: "Book not found or not available" });
@@ -68,7 +78,7 @@ router.post("/borrow/:id", verifyToken, async (req: Request, res: Response) => {
     } catch (error) {
         await booksCollection?.updateOne(
             { _id: bookId },
-            { $inc: { availableCopies: 1 } },
+            { $inc: { availableCopies: 1, borrowCount: -1 } },
         );
         throw error;
     }
@@ -76,7 +86,7 @@ router.post("/borrow/:id", verifyToken, async (req: Request, res: Response) => {
     if (!result) {
         await booksCollection?.updateOne(
             { _id: bookId },
-            { $inc: { availableCopies: 1 } },
+            { $inc: { availableCopies: 1, borrowCount: -1 } },
         );
         res.status(500).json({ message: "Failed to create borrow record" });
         return;
