@@ -9,17 +9,17 @@ router.get("/trending-books", async (req: Request, res: Response) => {
             booksCollection
                 ?.find({ borrowCount: { $gte: 3 } })
                 .sort({ borrowCount: -1 })
-                .limit(10)
+                .limit(7)
                 .toArray(),
             booksCollection
                 ?.find({})
                 .sort({ createdAt: -1 })
-                .limit(10)
+                .limit(7)
                 .toArray(),
             booksCollection
                 ?.find({ borrowCount: { $gt: 0 } })
                 .sort({ borrowCount: -1 })
-                .limit(10)
+                .limit(7)
                 .toArray(),
         ]);
 
